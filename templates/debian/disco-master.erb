@@ -1,0 +1,124 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          disco-master
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start the Disco master
+# Description:
+#
+### END INIT INFO
+
+# Author: Dan Crosta <dcrosta@late.am>
+
+# Do NOT "set -e"
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Disco Map-Reduce framework master node"
+NAME=disco
+DAEMON=/usr/local/bin/$NAME
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Disco requires HOME to be set
+USER=<%= @disco_user %>
+HOME=$(eval echo ~$USER)
+
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+
+running() {
+    [ -z "$($DAEMON status | grep stopped)" ]
+    errcode=$?
+    return $errcode
+}
+
+start_server() {
+    export HOME
+    su $USER -c "$DAEMON start"
+    errcode=$?
+    return $errcode
+}
+
+stop_server() {
+    export HOME
+    su $USER -c "$DAEMON stop"
+    errcode=$?
+    return $errcode
+}
+
+restart_server() {
+    export HOME
+    su $USER -c "$DAEMON restart"
+    errcode=$?
+    return $errcode
+}
+
+
+
+case "$1" in
+  start)
+        if running ;  then
+            log_success_msg "disco-master already running"
+            exit 0
+        fi
+        if start_server ; then
+            log_success_msg "disco-master started"
+            exit 0
+        else
+            log_failure_msg "disco-master couldn't be started"
+            exit 1
+        fi
+    ;;
+  stop)
+        if running ; then
+            if stop_server ; then
+                log_success_msg "disco-master stopped"
+                exit 0
+            else
+                log_failure_msg "disco-master couldn't be stopped"
+                exit 1
+            fi
+        else
+            log_daemon_msg "disco-master already stopped"
+            exit 0
+        fi
+        ;;
+  restart|force-reload)
+        if restart_server ; then
+            log_success_msg "disco-master restarted"
+            exit 0
+        else
+            log_failure_msg "disco-master couldn't be restarted"
+            exit 1
+        fi
+    ;;
+  status)
+        if running ;  then
+            log_success_msg "disco-master running"
+            exit 0
+        else
+            log_success_msg "disco-master stopped"
+            exit 3
+        fi
+        ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|force-reload|status}" >&2
+    exit 3
+    ;;
+esac

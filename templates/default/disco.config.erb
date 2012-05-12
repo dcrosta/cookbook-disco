@@ -1,0 +1,9 @@
+{
+  "hosts": [
+     <% @slaves.each do |slave| -%>
+     ["<%= slave.name %>", "<%= slave['cpu']['total'] %>"],
+     <% end -%>
+     ["<%= node.name %>","0"]
+  ],
+  "blacklist": []
+}
