@@ -28,6 +28,9 @@
 
 attrs = node["disco"]
 
+include_recipe "build-essential"
+package "erlang"
+
 directory attrs["checkout"] do
   owner attrs["user"]
   group attrs["group"]
@@ -35,10 +38,10 @@ directory attrs["checkout"] do
   recursive true
 end
 
-
-include_recipe "build-essential"
-package "erlang"
-
+# Make logs seem to be in a more convenient spot
+link "/var/log/disco" do
+  to "/usr/local/var/disco/log"
+end
 
 [ "/usr/local/var/disco", "/usr/local/var/disco/ddfs" ].each do |dir|
   directory dir do
@@ -54,15 +57,11 @@ execute "chown-disco-data-dir" do
   action :nothing
 end
 
-# Make logs seem to be in a more convenient spot
-link "/var/log/disco" do
-  to "/usr/local/var/disco/log"
-end
-
 execute "install-disco" do
   command "make install"
   cwd attrs["checkout"]
   action :nothing
+  notifies :run, "execute[chown-disco-data-dir]"
 end
 
 git attrs["checkout"] do
@@ -74,7 +73,6 @@ git attrs["checkout"] do
 
   action :sync
   notifies :run, "execute[install-disco]"
-  notifies :run, "execute[chown-disco-data-dir]"
 end
 
 file "#{node['etc']['passwd'][attrs['user']]['dir']}/.erlang.cookie" do
