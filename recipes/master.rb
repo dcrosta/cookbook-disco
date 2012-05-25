@@ -63,7 +63,7 @@ tmpl = template "/usr/local/var/disco/disco_8989.config" do
   )
   action :create
   notifies :restart, "service[disco-master]"
-  not_if Chef::Config["solo"]
+  not_if { Chef::Config["solo"] }
 end
 
 if Chef::Config["solo"]
