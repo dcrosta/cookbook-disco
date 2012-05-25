@@ -43,6 +43,12 @@ Attributes
 Usage
 =====
 
+The cookbook includes an SSH key pair -- note that since this is published
+publicly, deploying this keypair to a running, world-accessible cluster is
+insecure! You should overwrite `files/default/id_rsa` and
+`files/default/id_rsa.pub` with a matching, private keypair and take steps
+to ensure that the private key is not publicly disclosed.
+
 The cookbook has two recipes: `default` and `master`.
 
 `default` Recipe
