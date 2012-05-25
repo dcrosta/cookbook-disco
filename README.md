@@ -68,3 +68,12 @@ configuration file for the Disco cluster, based on a node search. It may
 take several Chef runs for the search to stabilize, and the Disco master
 will be restarted each time this templated file changes.
 
+Changes
+=======
+
+* 0.1.1 (May 25, 2012)
+    * Added warning about SSH keypair included in cookbook
+    * Fixed foodcritic warnings
+* 0.1.0 (May 12, 2012)
+    * Initial release
+
