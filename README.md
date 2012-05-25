@@ -73,6 +73,8 @@ will be restarted each time this templated file changes.
 Changes
 =======
 
+* 0.1.2 (May 25, 2012)
+    * Corrected an invalid `not_if`
 * 0.1.1 (May 25, 2012)
     * Added warning about SSH keypair included in cookbook
     * Fixed foodcritic warnings
