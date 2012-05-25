@@ -53,7 +53,7 @@ template "#{node['etc']['passwd'][attrs['user']]['dir']}/.ssh/config" do
   action :create
 end
 
-template "/usr/local/var/disco/disco_8989.config" do
+tmpl = template "/usr/local/var/disco/disco_8989.config" do
   source "disco.config.erb"
   owner attrs["user"]
   group attrs["group"]
@@ -63,5 +63,9 @@ template "/usr/local/var/disco/disco_8989.config" do
   )
   action :create
   notifies :restart, "service[disco-master]"
+  not_if Chef::Config["solo"]
 end
 
+if Chef::Config["solo"]
+  Chef::Log.info("Did not generate #{tmpl} since you are using chef-solo. You may configure your cluster through Disco's web interface.")
+end

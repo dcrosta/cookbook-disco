@@ -7,5 +7,6 @@ version          "0.1.0"
 
 depends "python", ">= 1.0.6"
 depends "simple_iptables", ">= 0.1.0"
+depends "build-essential", ">= 1.0.0"
 
 supports "debian", ">= 6.0"
