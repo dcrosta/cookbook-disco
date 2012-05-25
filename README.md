@@ -10,6 +10,8 @@ It is possible that earlier versions of these cookbooks will work as well.
 These are the versions with which I've tested the cookbook.
 
 * python >= 1.0.6
+* simple_iptables >= 0.1.0
+* build-essential >= 1.0.0
 
 Platforms
 =========
